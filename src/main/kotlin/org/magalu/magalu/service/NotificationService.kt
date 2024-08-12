@@ -10,8 +10,10 @@ import java.util.*
 import java.util.function.Consumer
 
 @Service
-class NotificationService(private val repository: NotificationRepository) {
-
+class NotificationService(
+    private val repository: NotificationRepository,
+    private val sendMessage: SendMessage
+) {
     fun scheduleNotification(dto: AgendamentoDTO) {
         val notification = dto.toNotification()
         repository.save(notification)
@@ -46,9 +48,12 @@ class NotificationService(private val repository: NotificationRepository) {
 
     private fun sendNotification(): Consumer<Notification> {
         return Consumer { notification ->
-            // TODO - REALIZAR O ENVIO DA NOTIFICAÇÃO
-            notification.status = StatusEntity.Values.SUCCESS.toStatus()
-            repository.save(notification)
+            try {
+                sendMessage.send(notification)
+                notification.status = StatusEntity.Values.SUCCESS.toStatus()
+            } catch (e: Exception) {
+                notification.status = StatusEntity.Values.ERROR.toStatus()
+            }
         }
     }
 }

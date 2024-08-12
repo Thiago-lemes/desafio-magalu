@@ -19,7 +19,7 @@ class Channel {
         this.description = description
     }
 
-    enum class Values(private val id: Long, private val description: String) {
+    enum class Values(val id: Long, val description: String) {
         EMAIL(1L, "email"),
         SMS(2L, "sms"),
         PUSH(3L, "push"),
