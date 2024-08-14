@@ -51,6 +51,7 @@ class NotificationService(
             try {
                 sendMessage.send(notification)
                 notification.status = StatusEntity.Values.SUCCESS.toStatus()
+                repository.save(notification)
             } catch (e: Exception) {
                 notification.status = StatusEntity.Values.ERROR.toStatus()
             }
